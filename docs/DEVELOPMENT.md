@@ -150,7 +150,7 @@ Logs will appear in `journalctl`.
 * Check `metadata.json`:
 
 ```json
-"shell-version": ["45", "46"]
+"shell-version": ["46", "50"]
 ```
 
 ### No UI appears

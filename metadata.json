@@ -3,8 +3,9 @@
   "description": "Shows the real-time usage in the GNOME top bar like CPU, RAM, network (download/upload), etc.",
   "uuid": "resource-monitor@dileepa.dev",
   "shell-version": [
-    "46"
+    "46",
+    "50"
   ],
   "version": 1,
-  "url": "https://github.com/dileepadev/resource-monitor"
+  "url": "https://github.com/dileepadev/gnome-resource-monitor"
 }

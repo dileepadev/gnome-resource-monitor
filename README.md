@@ -14,10 +14,11 @@ Shows the real‑time usage in the GNOME top bar like CPU, RAM, network (downloa
   "description": "Shows the real-time usage in the GNOME top bar like CPU, RAM, network (download/upload), etc.",
   "uuid": "resource-monitor@dileepa.dev",
   "shell-version": [
-    "46"
+    "46",
+    "50"
   ],
   "version": 1,
-  "url": "https://github.com/dileepadev/resource-monitor"
+  "url": "https://github.com/dileepadev/gnome-resource-monitor"
 }
 ```
 
@@ -28,7 +29,7 @@ Shows the real‑time usage in the GNOME top bar like CPU, RAM, network (downloa
 1. **Clone the repository** directly into your local extensions directory:
 
    ```bash
-   git clone https://github.com/dileepadev/resource-monitor.git \ 
+   git clone https://github.com/dileepadev/gnome-resource-monitor.git \
    ~/.local/share/gnome-shell/extensions/resource-monitor@dileepa.dev
    ```
 

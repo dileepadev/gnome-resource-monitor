@@ -13,11 +13,22 @@ Changes are organized into the following categories:
 
 - Changes for the next release are available in development branches.
 
+## [v1.0.1] - 2026-07-30
+
+### Changed
+
+- Updated repository references to `gnome-resource-monitor`.
+- Added support metadata for GNOME Shell 50.1 on Ubuntu 26.04 LTS / Wayland.
+
+### Fixed
+
+- Aligned extension metadata and documentation with the renamed repository and GNOME Shell 50 support requirements.
+
 ## [v1.0.0] - 2026-01-20
 
 ### Added
 
-- Created GitHub repository (`resource-monitor`).  
+- Created GitHub repository (`gnome-resource-monitor`).
 - Initialized GNOME Shell extension scaffold for Resource Monitor.  
 - Created extension scaffold and boilerplate.  
 - Implemented basic indicator UI in the GNOME top bar.  
@@ -34,5 +45,6 @@ Changes are organized into the following categories:
 <!-- v1.0.0 -->
 <!-- v0.0.1 -->
 
-[Unreleased]: https://github.com/dileepadev/resource-monitor/branches
-[v1.0.0]: https://github.com/dileepadev/resource-monitor/releases/tag/v1.0.0
+[Unreleased]: https://github.com/dileepadev/gnome-resource-monitor/branches
+[v1.0.1]: https://github.com/dileepadev/gnome-resource-monitor/releases/tag/v1.0.1
+[v1.0.0]: https://github.com/dileepadev/gnome-resource-monitor/releases/tag/v1.0.0
