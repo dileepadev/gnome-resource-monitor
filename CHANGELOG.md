@@ -18,7 +18,7 @@ Changes are organized into the following categories:
 ### Changed
 
 - Updated repository references to `gnome-resource-monitor`.
-- Added support metadata for GNOME Shell 50.1 on Ubuntu 26.04 LTS / Wayland.
+- Added explicit support metadata for GNOME Shell 50.1 on Ubuntu 26.04 LTS / Wayland.
 
 ### Fixed
 

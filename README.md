@@ -15,7 +15,8 @@ Shows the real‑time usage in the GNOME top bar like CPU, RAM, network (downloa
   "uuid": "resource-monitor@dileepa.dev",
   "shell-version": [
     "46",
-    "50"
+    "50",
+    "50.1"
   ],
   "version": 1,
   "url": "https://github.com/dileepadev/gnome-resource-monitor"
