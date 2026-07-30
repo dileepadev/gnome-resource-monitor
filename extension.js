@@ -23,7 +23,7 @@ import { ResourceMonitorIndicator } from './indicator.js';
 export default class ResourceMonitorExtension extends Extension {
     enable() {
         this._indicator = new ResourceMonitorIndicator(this.dir);
-        Main.panel.addToStatusArea(this.uuid, this._indicator, 0, 'right');
+        Main.panel.addToStatusArea(this.uuid, this._indicator);
     }
 
     disable() {
