@@ -3,6 +3,7 @@ import St from 'gi://St';
 import GLib from 'gi://GLib';
 import Gio from 'gi://Gio';
 import Clutter from 'gi://Clutter';
+import Pango from 'gi://Pango';
 
 import {gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as PanelMenu from 'resource:///org/gnome/shell/ui/panelMenu.js';
@@ -22,18 +23,18 @@ class ResourceMonitorIndicator extends PanelMenu.Button {
         });
         
         // CPU
-        this._cpuItem = this._createItem('computer-chip-symbolic', 42);
+        this._cpuItem = this._createItem('computer-chip-symbolic');
         this._layout.add_child(this._cpuItem.box);
 
         // RAM
-        this._ramItem = this._createItem('ssd-symbolic', 42);
+        this._ramItem = this._createItem('ssd-symbolic');
         this._layout.add_child(this._ramItem.box);
 
         // Network
-        this._downItem = this._createItem('arrow4-down-symbolic', 56);
+        this._downItem = this._createItem('arrow4-down-symbolic');
         this._layout.add_child(this._downItem.box);
         
-        this._upItem = this._createItem('arrow4-up-symbolic', 56);
+        this._upItem = this._createItem('arrow4-up-symbolic');
         this._layout.add_child(this._upItem.box);
 
         this.add_child(this._layout);
@@ -75,7 +76,7 @@ class ResourceMonitorIndicator extends PanelMenu.Button {
         });
     }
 
-    _createItem(iconName, width) {
+    _createItem(iconName) {
         let box = new St.BoxLayout({ style_class: 'resource-monitor-item' });
         
         // Use gicon for custom/file icon support
@@ -87,8 +88,12 @@ class ResourceMonitorIndicator extends PanelMenu.Button {
         let label = new St.Label({
             text: '...',
             y_align: Clutter.ActorAlign.CENTER,
-            width: width
+            x_align: Clutter.ActorAlign.START
         });
+
+        label.clutter_text.set_single_line_mode(true);
+        label.clutter_text.set_line_wrap(false);
+        label.clutter_text.set_ellipsize(Pango.EllipsizeMode.NONE);
         
         box.add_child(icon);
         box.add_child(label);
