@@ -1,14 +1,14 @@
 /* Add your custom extension styling here */
 .resource-monitor-box {
-    spacing: 3px;
+    spacing: 2px;
 }
 
 .resource-monitor-menu {
-    min-width: 300px;
+    min-width: 240px;
 }
 
 .resource-monitor-item {
-    spacing: 0.5px;
+    spacing: 1px;
 }
 
 .resource-monitor-item .system-status-icon {

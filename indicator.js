@@ -22,18 +22,18 @@ class ResourceMonitorIndicator extends PanelMenu.Button {
         });
         
         // CPU
-        this._cpuItem = this._createItem('computer-chip-symbolic', 50);
+        this._cpuItem = this._createItem('computer-chip-symbolic', 42);
         this._layout.add_child(this._cpuItem.box);
 
         // RAM
-        this._ramItem = this._createItem('ssd-symbolic', 50);
+        this._ramItem = this._createItem('ssd-symbolic', 42);
         this._layout.add_child(this._ramItem.box);
 
         // Network
-        this._downItem = this._createItem('arrow4-down-symbolic', 68);
+        this._downItem = this._createItem('arrow4-down-symbolic', 56);
         this._layout.add_child(this._downItem.box);
         
-        this._upItem = this._createItem('arrow4-up-symbolic', 68);
+        this._upItem = this._createItem('arrow4-up-symbolic', 56);
         this._layout.add_child(this._upItem.box);
 
         this.add_child(this._layout);
@@ -82,7 +82,7 @@ class ResourceMonitorIndicator extends PanelMenu.Button {
         let icon = new St.Icon({
             gicon: this._getGIcon(iconName),
             style_class: 'system-status-icon',
-            icon_size: 16
+            icon_size: 14
         });
         let label = new St.Label({
             text: '...',
