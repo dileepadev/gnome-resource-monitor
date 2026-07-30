@@ -23,6 +23,7 @@ Changes are organized into the following categories:
 ### Fixed
 
 - Aligned extension metadata and documentation with the renamed repository and GNOME Shell 50 support requirements.
+- Made the panel indicator layout more compact and stable for changing values while preserving readability.
 
 ## [v1.0.0] - 2026-01-20
 
