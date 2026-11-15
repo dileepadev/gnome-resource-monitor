@@ -1,76 +1,31 @@
 # Versioning
 
-This project follows a versioning pattern similar to [Semantic Versioning](https://semver.org/) (SemVer) for managing releases.
+Resource Monitor uses `MAJOR.MINOR.PATCH` release names and Git tags such as `v1.1.0`.
 
-## Table of Contents
+- **MAJOR**: incompatible behavior, settings, or saved-statistics format changes.
+- **MINOR**: backward-compatible features.
+- **PATCH**: fixes and small improvements.
 
-- [Versioning](#versioning)
-  - [Table of Contents](#table-of-contents)
-  - [Format](#format)
-    - [Examples](#examples)
-  - [Release Process](#release-process)
-    - [Typical Steps](#typical-steps)
-  - [Questions or Issues?](#questions-or-issues)
+The latest published release is **v1.0.1**. The next release, **v1.1.0**, is in development and tracked in [issue #3](https://github.com/dileepadev/gnome-resource-monitor/issues/3).
 
-## Format
+## GNOME extension metadata
 
-Version numbers follow the structure:
+Git release tags and GNOME submission versions serve different purposes. Follow the [GNOME metadata guidance](https://gjs.guide/extensions/overview/anatomy.html#metadata-json-required):
 
-`MAJOR.MINOR.PATCH`
+- `version-name` is the user-visible release (for example `1.1.0`), shown on the About page.
+- `version` is the integer that extensions.gnome.org manages for submissions. Never put a semantic-version string in it, and check the last published integer before a release.
 
-- **MAJOR** – Incompatible API changes or major breaking updates  
-- **MINOR** – Backward-compatible functionality and feature additions  
-- **PATCH** – Backward-compatible bug fixes and small improvements
+Use major Shell version strings such as `"51"` in `shell-version`; record tested point releases such as 50.1 in the compatibility matrix. Metadata enables validation, while live session results establish the support claim.
 
-### Examples
+This project is a GJS extension. There is no `package.json` release version to update.
 
-- `1.0.0` – First stable release  
-- `1.1.0` – Adds a new endpoint or feature  
-- `1.1.1` – Fixes a bug or makes a minor improvement
+## Release process
 
-## Release Process
+1. Complete the tracking issue's implementation and acceptance criteria.
+2. Run `make check` and the documented live GNOME compatibility matrix, including GNOME 51 / Wayland with normal version validation enabled.
+3. Update `metadata.json` (`version-name`), README, development documentation, and the changelog with the final behavior, tested environments, and known limitations.
+4. Build the extension ZIP with `make pack` (runtime files, compiled schema, translations if present, and the license; development files are excluded) and verify installation from it in a clean test profile.
+5. After review, commit the release changes, tag `v1.1.0`, and publish GitHub release notes with the verified ZIP. Submit to extensions.gnome.org if distribution there is planned.
+6. Start a new `Unreleased` changelog section and update the release issue with results.
 
-All notable changes are documented in the [CHANGELOG.md](CHANGELOG.md) file.
-
-### Typical Steps
-
-1. Complete all features and fixes planned for the release
-2. Update the `CHANGELOG.md` with categorized entries:  
-   - **Added**, **Changed**, **Fixed**, **Removed**
-3. Bump the version number in `package.json` (and `package-lock.json` if needed)
-4. Commit changes with a version-related message (e.g. `chore: release v1.2.0`)
-5. Tag the release:
-
-   ```bash
-   git tag v1.2.0
-   git push origin v1.2.0
-    ````
-
-6. (Optional) Create a GitHub release and paste the relevant changelog section
-
-## Pre-release Versions
-
-For beta or release candidates, we use suffixes:
-
-- `1.2.0-beta.1` – Beta release
-- `2.0.0-rc.1` – Release candidate
-
-These versions are intended for testing and may not be fully stable.
-
-## Viewing Tags & Differences
-
-List all version tags:
-
-```bash
-git tag
-```
-
-View differences between versions:
-
-```bash
-git log v1.1.0..v1.2.0
-```
-
-## Questions or Issues?
-
-If you have questions about the versioning strategy or encounter version-related problems, feel free to open an issue on the [GitHub repository](https://github.com/dileepadev/gnome-resource-monitor/issues).
+Pre-release Git tags may use names such as `v1.1.0-beta.1`; metadata `version-name` must follow GNOME's allowed format. See the [GitHub issues](https://github.com/dileepadev/gnome-resource-monitor/issues) for release planning.
