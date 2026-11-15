@@ -1,1 +1,4 @@
 .vscode/
+schemas/gschemas.compiled
+dist/
+__pycache__/
