@@ -9,4 +9,3 @@ Release v1.1.0 is tracked in [issue #3](https://github.com/dileepadev/gnome-reso
 - [x] Tests, CI, reproducible ZIP (`make pack`), MIT licensing, and documentation with dark-mode screenshots.
 - [x] Confirmed working in daily use on a GNOME 51 desktop.
 - [x] Commit, merge, tag `v1.1.0`, and publish the GitHub release with the ZIP.
-- [ ] Optional: submit to extensions.gnome.org.

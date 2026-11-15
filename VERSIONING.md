@@ -25,7 +25,7 @@ This project is a GJS extension. There is no `package.json` release version to u
 2. Run `make check` and the documented live GNOME compatibility matrix, including GNOME 51 / Wayland with normal version validation enabled.
 3. Update `metadata.json` (`version-name`), README, development documentation, and the changelog with the final behavior, tested environments, and known limitations.
 4. Build the extension ZIP with `make pack` (runtime files, compiled schema, translations if present, and the license; development files are excluded) and verify installation from it in a clean test profile.
-5. After review, commit the release changes, tag `v1.1.0`, and publish GitHub release notes with the verified ZIP. Submit to extensions.gnome.org if distribution there is planned.
+5. After review, commit the release changes, tag `v1.1.0`, and publish GitHub release notes with the verified ZIP.
 6. Start a new `Unreleased` changelog section and update the release issue with results.
 
 Pre-release Git tags may use names such as `v1.1.0-beta.1`; metadata `version-name` must follow GNOME's allowed format. See the [GitHub issues](https://github.com/dileepadev/gnome-resource-monitor/issues) for release planning.
