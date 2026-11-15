@@ -1,33 +1,69 @@
-/* extension.js
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 2 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- * SPDX-License-Identifier: GPL-2.0-or-later
- */
+// SPDX-License-Identifier: MIT
 
-import {Extension} from 'resource:///org/gnome/shell/extensions/extension.js';
+import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 import * as Main from 'resource:///org/gnome/shell/ui/main.js';
-import { ResourceMonitorIndicator } from './indicator.js';
+
+import {ResourceMonitorIndicator} from './indicator.js';
+import {fillTemplate, formatBytes} from './metrics.js';
+import {resetSavedUsage, UsageTracker} from './usageTracker.js';
 
 export default class ResourceMonitorExtension extends Extension {
     enable() {
-        this._indicator = new ResourceMonitorIndicator(this.dir);
+        this._settings = this.getSettings();
+        this._indicator = new ResourceMonitorIndicator(this.dir, this._settings,
+            () => this.openPreferences());
         Main.panel.addToStatusArea(this.uuid, this._indicator);
+        this._settingsSignals = [
+            this._settings.connect('changed::usage-tracking', () => this._syncTracker()),
+            this._settings.connect('changed::usage-track-networks', () =>
+                this._tracker?.setTrackNetworks(this._settings.get_boolean('usage-track-networks'))),
+            this._settings.connect('changed::usage-reset-request', () => this._reset()),
+            ...['usage-monthly-cap-gib', 'usage-cap-warning-percent', 'usage-billing-day'].map(key =>
+                this._settings.connect(`changed::${key}`, () => this._tracker?.recheckCap())),
+        ];
+        this._syncTracker();
+    }
+
+    _syncTracker() {
+        const enabled = this._settings.get_boolean('usage-tracking');
+        if (enabled && !this._tracker) {
+            this._tracker = new UsageTracker(this._settings, {
+                onCapLevel: (level, used, cap) => this._notifyCap(level, used, cap),
+                onChanged: () => this._indicator?.refreshUsage(),
+            });
+        } else if (!enabled && this._tracker) {
+            this._tracker.destroy();
+            this._tracker = null;
+        }
+        this._indicator.setUsageTracker(this._tracker ?? null);
+    }
+
+    _reset() {
+        if (this._tracker)
+            this._tracker.reset();
+        else
+            resetSavedUsage();
+        this._indicator?.refreshUsage();
+    }
+
+    _notifyCap(level, used, cap) {
+        const title = level >= 2 ? _('Monthly data limit reached')
+            : _('Approaching monthly data limit');
+        // Translators: the first %s is data used, the second the monthly limit.
+        const body = fillTemplate(_('%s of %s used this period.'), formatBytes(used), formatBytes(cap));
+        Main.notify(title, body);
     }
 
     disable() {
-        this._indicator.destroy();
+        for (const id of this._settingsSignals ?? [])
+            this._settings.disconnect(id);
+        this._settingsSignals = null;
+        // Stop counting synchronously; the final encrypted save drains in the
+        // background and the next enable waits for it.
+        this._tracker?.destroy();
+        this._tracker = null;
+        this._indicator?.destroy();
         this._indicator = null;
+        this._settings = null;
     }
 }

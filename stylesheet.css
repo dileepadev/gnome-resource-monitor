@@ -1,16 +1,159 @@
-/* Add your custom extension styling here */
+/* Same 10px edge gap as AppIndicator icons (for example ChatGPT and Claude),
+   whose 6px button padding is followed by the theme's 4px icon margin. This
+   indicator's icons have no margin, so the button padding provides all 10px. */
+#panel .panel-button.resource-monitor-indicator {
+    -natural-hpadding: 10px;
+    -minimum-hpadding: 6px;
+}
+
 .resource-monitor-box {
-    spacing: 2px;
+    spacing: 12px;
 }
 
 .resource-monitor-menu {
-    min-width: 240px;
+    min-width: 22em;
+}
+
+.resource-monitor-usage-heading {
+    font-weight: bold;
+}
+
+.resource-monitor-usage-value {
+    font-feature-settings: "tnum";
+    padding-left: 1.5em;
+}
+
+.resource-monitor-usage-status {
+    max-width: 22em;
+    font-size: 0.9em;
 }
 
 .resource-monitor-item {
-    spacing: 1px;
+    spacing: 4px;
 }
 
-.resource-monitor-item .system-status-icon {
-    color: #ffffff;
+/* Equal-width digits so a value does not shift as its digits change. */
+.resource-monitor-value {
+    font-feature-settings: "tnum";
+}
+
+/* Panel themes add padding and margins to status icons. Keep our own gaps. */
+#panel .panel-button .resource-monitor-item .system-status-icon {
+    padding: 0;
+    margin: 0;
+}
+
+/* Data usage calendar */
+.resource-monitor-calendar {
+    padding: 0.4em 0.6em 0.6em;
+    spacing: 0.4em;
+}
+
+.resource-monitor-calendar-title {
+    font-weight: bold;
+}
+
+.resource-monitor-calendar-nav {
+    border-radius: 99px;
+    padding: 0.3em;
+}
+
+.resource-monitor-calendar-nav:hover,
+.resource-monitor-calendar-nav:focus {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.resource-monitor-calendar-weekday {
+    font-size: 0.8em;
+    font-weight: bold;
+    padding: 0.2em 0;
+    opacity: 0.7;
+}
+
+.resource-monitor-calendar-day {
+    min-width: 2.2em;
+    min-height: 2.2em;
+    border-radius: 0.5em;
+    margin: 1px;
+    font-feature-settings: "tnum";
+}
+
+.resource-monitor-calendar-day:hover,
+.resource-monitor-calendar-day:focus {
+    box-shadow: inset 0 0 0 2px rgba(128, 128, 128, 0.6);
+}
+
+.resource-monitor-calendar-day:insensitive {
+    opacity: 0.4;
+}
+
+/* Usage shading relative to the busiest day of the month. */
+.resource-monitor-calendar-day.level-1 { background-color: rgba(53, 132, 228, 0.18); }
+.resource-monitor-calendar-day.level-2 { background-color: rgba(53, 132, 228, 0.36); }
+.resource-monitor-calendar-day.level-3 { background-color: rgba(53, 132, 228, 0.54); }
+.resource-monitor-calendar-day.level-4 { background-color: rgba(53, 132, 228, 0.75); }
+
+.resource-monitor-calendar-day:today {
+    font-weight: bold;
+    box-shadow: inset 0 0 0 1px rgba(128, 128, 128, 0.8);
+}
+
+.resource-monitor-calendar-day:selected {
+    box-shadow: inset 0 0 0 2px #3584e4;
+    font-weight: bold;
+}
+
+.resource-monitor-calendar-detail-title {
+    font-weight: bold;
+    padding-top: 0.4em;
+}
+
+.resource-monitor-calendar-details {
+    spacing: 0.25em;
+}
+
+/* History graphs */
+.resource-monitor-graphs {
+    padding: 0.4em 0.6em 0.6em;
+    spacing: 0.6em;
+}
+
+.resource-monitor-graph-ranges {
+    spacing: 0.3em;
+}
+
+.resource-monitor-graph-range {
+    padding: 0.2em 0.7em;
+    border-radius: 99px;
+    font-size: 0.9em;
+}
+
+.resource-monitor-graph-range:hover,
+.resource-monitor-graph-range:focus {
+    background-color: rgba(128, 128, 128, 0.2);
+}
+
+.resource-monitor-graph-range:checked {
+    background-color: rgba(53, 132, 228, 0.35);
+    font-weight: bold;
+}
+
+.resource-monitor-graph-box {
+    spacing: 0.2em;
+}
+
+.resource-monitor-graph-title {
+    font-weight: bold;
+}
+
+.resource-monitor-graph {
+    height: 3.2em;
+    min-width: 18em;
+    border-radius: 0.4em;
+    background-color: rgba(128, 128, 128, 0.08);
+}
+
+.resource-monitor-graph-scale {
+    font-size: 0.8em;
+    opacity: 0.7;
 }

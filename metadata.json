@@ -1,12 +1,14 @@
 {
   "name": "Resource Monitor",
-  "description": "Shows the real-time usage in the GNOME top bar like CPU, RAM, network (download/upload), etc.",
+  "description": "Shows real-time CPU, RAM, and network usage in the GNOME top bar, with encrypted data-usage statistics (daily, weekly, monthly, yearly) and an optional monthly data limit.",
   "uuid": "resource-monitor@dileepa.dev",
+  "version-name": "1.1.0",
   "shell-version": [
     "46",
     "50",
-    "50.1"
+    "51"
   ],
   "version": 1,
-  "url": "https://github.com/dileepadev/gnome-resource-monitor"
+  "url": "https://github.com/dileepadev/gnome-resource-monitor",
+  "settings-schema": "org.gnome.shell.extensions.resource-monitor"
 }
