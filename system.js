@@ -1,128 +1,78 @@
+// SPDX-License-Identifier: MIT
+import Gio from 'gi://Gio';
 import GLib from 'gi://GLib';
+
+import {parseCPU, cpuUsage, parseRAM, parseNetwork, networkDeltas, networkUsage} from './metrics.js';
+
+const MAX_SAMPLE_GAP_SECONDS = 5;
 
 export class SystemMonitor {
     constructor() {
-        this._prevCpu = { total: 0, idle: 0 };
-        this._prevNet = { recv: 0, sent: 0, time: 0 };
+        this._decoder = new TextDecoder();
+        this._files = ['/proc/stat', '/proc/meminfo', '/proc/net/dev']
+            .map(path => Gio.File.new_for_path(path));
+        this._cancellable = new Gio.Cancellable();
+        this._previous = null;
+        this._pending = false;
+        this._destroyed = false;
+        this._failed = false;
     }
 
-    getCPUUsage() {
-        try {
-            const [success, content] = GLib.file_get_contents('/proc/stat');
-            if (!success) return null;
-            
-            const lines = new TextDecoder().decode(content).split('\n');
-            const cpuLine = lines[0];
-            const parts = cpuLine.trim().split(/\s+/);
-            
-            const user = parseInt(parts[1]);
-            const nice = parseInt(parts[2]);
-            const system = parseInt(parts[3]);
-            const idle = parseInt(parts[4]);
-            const iowait = parseInt(parts[5]);
-            const irq = parseInt(parts[6]);
-            const softirq = parseInt(parts[7]);
-            
-            let currentTotal = user + nice + system + idle + iowait + irq + softirq;
-            for (let i = 8; i < parts.length; i++) {
-                currentTotal += parseInt(parts[i]);
-            }
+    _read(file) {
+        return new Promise((resolve, reject) => {
+            file.load_contents_async(this._cancellable, (source, result) => {
+                try {
+                    const [success, contents] = source.load_contents_finish(result);
+                    resolve(success ? this._decoder.decode(contents) : '');
+                } catch (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
 
-            const currentIdle = idle + iowait; 
-            
-            const diffTotal = currentTotal - this._prevCpu.total;
-            const diffIdle = currentIdle - this._prevCpu.idle;
-            
-            this._prevCpu = { total: currentTotal, idle: currentIdle };
-            
-            if (diffTotal === 0) return 0;
-            
-            const usage = 100 * (1 - (diffIdle / diffTotal));
-            return Math.max(0, Math.min(100, usage));
-            
-        } catch (e) {
-            console.error('resource-monitor@dileepa.dev: Error reading CPU usage', e);
+    async sample() {
+        if (this._pending || this._destroyed)
             return null;
+        this._pending = true;
+        try {
+            // Settle every read before allowing another cycle, even if one fails.
+            const results = await Promise.allSettled(this._files.map(file => this._read(file)));
+            if (this._destroyed)
+                return null;
+            const texts = results.map(result => result.status === 'fulfilled' ? result.value : '');
+            const current = {
+                cpu: parseCPU(texts[0]),
+                network: parseNetwork(texts[2]),
+                time: GLib.get_monotonic_time() / 1_000_000,
+            };
+            const ram = parseRAM(texts[1]);
+            const elapsed = this._previous ? current.time - this._previous.time : 0;
+            const previous = elapsed > 0 && elapsed <= MAX_SAMPLE_GAP_SECONDS ? this._previous : null;
+            const sample = {
+                cpu: cpuUsage(previous?.cpu, current.cpu),
+                ram,
+                network: networkUsage(previous?.network, current.network, elapsed),
+                // Byte totals for data usage. Counters are cumulative and resets
+                // are skipped, so the previous sample is used even after a gap
+                // (for example a Shell stall or suspend) to avoid losing traffic.
+                transferred: networkDeltas(this._previous?.network, current.network),
+                interval: previous ? elapsed : 0,
+            };
+            this._previous = current;
+            const failed = !current.cpu || ram === null || !current.network;
+            if (failed && !this._failed)
+                console.warn('Resource Monitor: one or more system metrics are unavailable');
+            this._failed = failed;
+            return sample;
+        } finally {
+            this._pending = false;
         }
     }
 
-    getRAMUsage() {
-        try {
-            const [success, content] = GLib.file_get_contents('/proc/meminfo');
-            if (!success) return null;
-            
-            const text = new TextDecoder().decode(content);
-            const totalMatch = text.match(/MemTotal:\s+(\d+)\s+kB/);
-            const availableMatch = text.match(/MemAvailable:\s+(\d+)\s+kB/);
-            
-            if (totalMatch && availableMatch) {
-                const total = parseInt(totalMatch[1]);
-                const available = parseInt(availableMatch[1]);
-                return 100 * ((total - available) / total);
-            }
-            return null;
-        } catch (e) {
-            console.error('resource-monitor@dileepa.dev: Error reading RAM usage', e);
-            return null;
-        }
-    }
-
-    getNetworkUsage() {
-        try {
-            const [success, content] = GLib.file_get_contents('/proc/net/dev');
-            if (!success) return null;
-
-            const lines = new TextDecoder().decode(content).split('\n');
-            let totalRecv = 0;
-            let totalSent = 0;
-            const currentTime = GLib.get_monotonic_time() / 1000000; // seconds
-
-            // Skip first 2 headers
-            for (let i = 2; i < lines.length; i++) {
-                let line = lines[i].trim();
-                if (!line) continue;
-                
-                const parts = line.split(/\s+/);
-                
-                let stats = parts;
-                if (parts[0].endsWith(':')) {
-                    stats = parts.slice(1);
-                } else if (parts[0].includes(':')) {
-                    const split = parts[0].split(':');
-                    stats = [split[1], ...parts.slice(1)];
-                }
-
-                if (stats.length >= 9) {
-                    if (lines[i].includes('lo:')) continue;
-
-                    const recv = parseInt(stats[0]);
-                    const sent = parseInt(stats[8]);
-                    if (!isNaN(recv)) totalRecv += recv;
-                    if (!isNaN(sent)) totalSent += sent;
-                }
-            }
-
-            let recvRate = 0;
-            let sentRate = 0;
-
-            if (this._prevNet.time > 0) {
-                const timeDiff = currentTime - this._prevNet.time;
-                if (timeDiff > 0) {
-                     if (totalRecv >= this._prevNet.recv) {
-                        recvRate = (totalRecv - this._prevNet.recv) / timeDiff;
-                     }
-                     if (totalSent >= this._prevNet.sent) {
-                        sentRate = (totalSent - this._prevNet.sent) / timeDiff;
-                     }
-                }
-            }
-
-            this._prevNet = { recv: totalRecv, sent: totalSent, time: currentTime };
-            return { recvRate, sentRate };
-
-        } catch (e) {
-            console.error('resource-monitor@dileepa.dev: Error reading network usage', e);
-            return null;
-        }
+    destroy() {
+        this._destroyed = true;
+        this._cancellable.cancel();
+        this._previous = null;
     }
 }

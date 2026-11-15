@@ -1,15 +1,12 @@
 # TODO
 
-This file tracks tasks, improvements, and features planned for upcoming updates or releases of this repository.  
+Release v1.1.0 is tracked in [issue #3](https://github.com/dileepadev/gnome-resource-monitor/issues/3). All planned work is done and v1.1.0 is released (2026-11-15).
 
->[!Note]
-> This list is **not exhaustive** and may change over time. Items are not necessarily in priority order.
-
-## Upcoming Tasks
-
-Currently, there are no specific tasks available for the next release.
-
-<!-- Example Task List Format
-
-- [x] Task 1: Description of task 1.
-- [ ] Task 2: Description of task 2. -->
+- [x] GNOME 51 support, measurement fixes, and asynchronous sampling.
+- [x] Constant-width panel indicator with AppIndicator-matching spacing.
+- [x] Data usage tracking with a calendar, monthly limit, and encrypted statistics.
+- [x] Top Processes (CPU, memory, network), history graphs, preferences, and About page.
+- [x] Tests, CI, reproducible ZIP (`make pack`), MIT licensing, and documentation with dark-mode screenshots.
+- [x] Confirmed working in daily use on a GNOME 51 desktop.
+- [x] Commit, merge, tag `v1.1.0`, and publish the GitHub release with the ZIP.
+- [ ] Optional: submit to extensions.gnome.org.

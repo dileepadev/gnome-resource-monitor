@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+  <schema id="org.gnome.shell.extensions.resource-monitor" path="/org/gnome/shell/extensions/resource-monitor/">
+    <key name="usage-tracking" type="b">
+      <default>true</default>
+      <summary>Track data usage</summary>
+      <description>Count data transferred over Wi-Fi, Ethernet, and mobile connections, with daily system statistics. Saved data is encrypted with a key kept in the login keyring. Turning this off stops counting and keeps saved statistics.</description>
+    </key>
+    <key name="usage-track-networks" type="b">
+      <default>false</default>
+      <summary>Track usage per network</summary>
+      <description>Also record usage per connection name (for example the Wi-Fi network name). Network names can reveal places you have been; they are stored encrypted, and turning this off forgets the recorded names.</description>
+    </key>
+    <key name="usage-billing-day" type="i">
+      <range min="1" max="28"/>
+      <default>1</default>
+      <summary>Billing cycle start day</summary>
+      <description>Day of the month on which the monthly usage period starts.</description>
+    </key>
+    <key name="usage-week-start" type="i">
+      <range min="0" max="6"/>
+      <default>1</default>
+      <summary>First day of the week</summary>
+      <description>0 is Sunday, 1 is Monday, and 6 is Saturday.</description>
+    </key>
+    <key name="usage-monthly-cap-gib" type="d">
+      <range min="0" max="1000000"/>
+      <default>0</default>
+      <summary>Monthly data limit in GiB</summary>
+      <description>Warn when the billing cycle's download plus upload approaches or reaches this limit. 0 turns warnings off.</description>
+    </key>
+    <key name="usage-cap-warning-percent" type="i">
+      <range min="50" max="99"/>
+      <default>80</default>
+      <summary>Data limit warning threshold</summary>
+      <description>Percentage of the monthly limit at which the first warning is shown.</description>
+    </key>
+    <key name="usage-retention-days" type="i">
+      <range min="62" max="3650"/>
+      <default>730</default>
+      <summary>Days of daily history to keep</summary>
+      <description>Older daily records are removed. Monthly and all-time totals are kept.</description>
+    </key>
+    <key name="usage-reset-request" type="x">
+      <default>0</default>
+      <summary>Reset request</summary>
+      <description>Internal: preferences set this to ask the extension to delete all usage statistics.</description>
+    </key>
+  </schema>
+</schemalist>
