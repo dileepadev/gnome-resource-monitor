@@ -56,7 +56,9 @@ export class UsageTracker {
         this._writes = Promise.resolve();
         this._loading = null;
         this._loadGeneration = 0;
-        this._lastCapCheck = 0;
+        // -Infinity: the first check runs immediately, even shortly after boot
+        // (the monotonic clock starts near zero then).
+        this._lastCapCheck = -Infinity;
         this._saveSource = GLib.timeout_add_seconds(GLib.PRIORITY_LOW, SAVE_INTERVAL_SECONDS, () => {
             this._persist();
             return GLib.SOURCE_CONTINUE;
@@ -171,7 +173,7 @@ export class UsageTracker {
 
     /** Re-check the cap immediately (after a settings change). */
     recheckCap() {
-        this._lastCapCheck = 0;
+        this._lastCapCheck = -Infinity;
     }
 
     summary() {

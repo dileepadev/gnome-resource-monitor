@@ -51,6 +51,7 @@ Version 1.1.0 (`version-name` in metadata; the integer `version` is managed by e
 - Exclude duplicate guest CPU counters and prime CPU/network baselines before displaying rates.
 - Calculate network deltas per interface to avoid spikes when interfaces appear, disappear, or reset.
 - Display unavailable readings explicitly and re-prime rates after sampling gaps longer than five seconds.
+- Run the first data-limit check right after enable; within a minute of boot it was skipped (found by CI).
 
 ### Security
 
