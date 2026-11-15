@@ -6,7 +6,7 @@ Resource Monitor uses `MAJOR.MINOR.PATCH` release names and Git tags such as `v1
 - **MINOR**: backward-compatible features.
 - **PATCH**: fixes and small improvements.
 
-The latest published release is **v1.0.1**. The next release, **v1.1.0**, is in development and tracked in [issue #3](https://github.com/dileepadev/gnome-resource-monitor/issues/3).
+Published releases, their notes, and the install ZIPs are on the [GitHub releases page](https://github.com/dileepadev/gnome-resource-monitor/releases).
 
 ## GNOME extension metadata
 
